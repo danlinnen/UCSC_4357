@@ -1,0 +1,53 @@
+#Daniel Linnen
+#Embedded Firmware Homework 1
+#File Archiver
+#Purpose:  Search for files that have not been used in a while, try to compress them and if they can be compressed
+
+$base_path = 'c:\\';
+
+#list of types that will not compress or that you would want to exclude for other reasons
+@excluded_file_types = ('ZIP','7z','PNG','EXE','DLL','MP3','MP4');
+
+#certain trees you might not want to compress.
+@excluded_base_paths = ('Windows');
+
+
+#How many directories deep to go
+$depth_into_file_structure = 8;
+
+#minimum compression size in bytes
+$file_size_minimum = 5000;
+
+#compression ratio minimum 7.5%
+$compression_ratio_min = 1.075;
+
+
+$current_path = $base_path;
+
+foreach $depth (0..$depth_into_file_structure){
+  @glob_of_files = glob($current_path);
+  foreach $file (@glob_of_files){
+    #directory check
+    unless(-d $file){
+      @file_parts  = split /\\/,$file;
+      $base_path = $file_parts[1];
+      #excluded path check
+      unless($base_path ~~ @excluded_base_paths){
+        $length_file_parts = @file_parts;
+	$index_last_element_file_parts = $length_file_parts - 1;
+	if($file_parts[$index_last_element_file_parts] =~ m/\.[a-zA-Z]{3,4}$/){
+	  $extension = $1;$extension = uc($extension);
+	  #excluded type check
+	  unless($extension ~~ @excluded_file_types){
+            $file_size = -s $file;
+	    #file size check
+	    unless($file_size < $file_size_minimum){
+              #out of time for 30 min activity.
+	      #file date check would be here
+	      #attempt to compress using DOS compact function.  (if it is compressed already this will not happen.)
+	      #check compression ratio, unless compression ratio exceeds minimum required, uncompress the data.
+	      #close loops
+	      #append current path with '*\' to go deeper into the path structure on next glob.
+	
+    
+
