@@ -1,0 +1,312 @@
+#include "mbed.h"
+ 
+DigitalOut Power_Switch(p21);
+
+Serial pc(USBTX, USBRX);
+void print_UART(void);
+int main() {
+    //char c;
+    Power_Switch = 0; //keeping the power on.
+    int flag_UART = 0;
+    int flag_power_off = 0;
+    int d;
+    int execute;
+    int flag_input;
+    //char buffer[128];
+    while(1){
+      execute = 0;
+      d = 0;
+      flag_input = 1;
+      wait(0.1);
+      //UART_ON = 1
+      //UART_OF = 2
+      //POWR_ON = 3
+      //POWR_OF = 4
+      //TEMP_RD = 5
+      //CURR_RD = 6
+      //pc.gets(buffer, 1);
+      //pc.scanf(str, "%s", buffer);
+      pc.printf("MENU\n\r");
+      pc.printf("============================\n\r"); 
+      pc.printf("    1. UART ON\n\r");
+      pc.printf("    2. UART OFF\n\r");
+      pc.printf("    3. POWR ON\n\r");
+      pc.printf("    4. POWR OFF\n\r");
+      pc.printf("    5. TEMP RD\n\r");
+      pc.printf("    6. CURR RD\n\r");
+      pc.printf("============================\n\r");
+      pc.printf("Please enter selection:  ");
+      while(flag_input){
+        wait(0.1);
+        //pc.scanf("%d", &d);
+        //char c = pc.getc();
+        d = int(pc.getc()) - 48; //convert to menu options from ASCII table
+        
+        if(d > 0 && d < 7){
+            flag_input = 0;
+            execute = d;
+            d = 0;
+          }
+      }
+      if(execute == 1){
+          pc.printf("Executing Menu Option '%d' (Turn On UART)\n\r", execute);
+          //do stuff to turn the UART on
+          flag_UART = 1;
+      }
+      if(execute == 2){
+          pc.printf("Executing Menu Option  '%d' (Turn Off UART)\n\r", execute);
+          //do stuff to turn the UART off
+          flag_UART = 0;
+      }
+      if(execute == 3){
+          pc.printf("Executing Menu Option '%d' (Turn Power On)\n\r", execute);
+          //do stuff to turn the POWER on
+          Power_Switch = 0;  //assuming GPIO 9 can keep the power on by output of a low signal...
+          if(flag_power_off  && flag_UART){
+            print_UART();
+            flag_power_off = 0;
+          }
+      }
+      if(execute == 4){
+          pc.printf("Executing Menu Option '%d' (Turn Power Off)\n\r", execute);
+          //do stuff to turn the POWER off
+          Power_Switch = 1; //assuming GPIO 9 can be driven high to turn off the power...
+          flag_power_off = 1;
+      }
+      if(execute == 5){
+          pc.printf("Executing Menu Option '%d' (Read the temperature)\n\r", execute);
+          //do stuff to read the TEMPERATURE
+      }
+      if(execute == 6){
+          pc.printf("Executing Menu Option (Measure the current draw)'%d'\n\r", execute);
+          //do stuff to read the CURRENT
+      }
+      //c = pc.getc();
+      //pc.printf("I got the character '%c'\n\r", c);    
+      //pc.printf("I got the String '%s'\n\r", buffer);
+      //pc.printf("I got the character '%d'\n\r", d);  
+       
+    }
+}
+
+void print_UART(void){
+    pc.printf("[06-25-14 09:28:42.228] << Send Wake up, Wait 250 ms >>\n\r");
+    pc.printf("[06-25-14 09:28:42.759] << Send Wake up, Wait 250 ms >>\n\r");
+    pc.printf("[06-25-14 09:28:42.759]<< Awake >>\n\r");
+    pc.printf("[06-25-14 09:28:43.071]Failed: UART Time Out, status = 0x1 \n\r");
+    pc.printf("[06-25-14 09:28:45.146] Failed to load string, reload\n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:28:45.146]Failed: UART Time Out, status = 0x1 \n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:28:47.252] Failed to load string, reload\n\r");
+    pc.printf("[06-25-14 09:28:47.252]Failed: UART Time Out, status = 0x1 \n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:28:49.358] Retried 3 times. Failed to load string sections! Please check drive and UART cable!\n\r");
+    pc.printf("[06-25-14 09:28:49.358]TOUT: Switch to ASCII state\n\r");
+    pc.printf("[06-25-14 09:28:50.013]TOUT: Switch to ASCII state\n\r");
+    pc.printf("[06-25-14 09:38:24.600]TOUT: Switch to ASCII state\n\r");
+    pc.printf("[06-25-14 09:39:32.912] TOUT: Switch to ASCII state\n\r");
+    pc.printf("[06-25-14 09:39:35.626]TOUT: Switch to ASCII state\n\r");
+    pc.printf("[06-25-14 09:39:57.357]<ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 E\n\r");
+    pc.printf("[06-25-14 09:40:05.968] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 EC=27 EP=512\n\r");
+    wait(1.75);
+    pc.printf("[ROM] Root is missi\n\r");
+    wait(0.5);
+    pc.printf("[06-25-14 09:40:05.983] <ROM MSG>:  [ROM] Root is missi\n\r");
+    wait(0.25);
+    pc.printf("[06-25-14 09:40:05.983]<ROM MSG>:  [ROM] PHY Ready\n\r");
+    wait(0.75);
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:40:07.106]<ROM MSG>:  [ROM] PORRST\n\r");
+    pc.printf("[ROM] Rev: 402  CID: 200026BB\n\r");
+    pc.printf("[06-25-14 09:40:27.839] <ROM MSG>:  [ROM] Rev: 402  CID: 200026BB\n\r");
+    pc.printf("[06-25-14 09:40:27.839] <ROM MSG>:  [ROM] Try BCH[1]: CP=33 EC=54 EP=485\n\r");
+    pc.printf("[ROM] Try B\n\r");
+    pc.printf("[06-25-14 09:40:27.854] <ROM MSG>:  [ROM] Try B\n\r");
+    pc.printf("[06-25-14 09:40:27.854] <ROM MSG>:  [ROM] Try BCH[3]: CP=36 EC=59 EP=485\n\r");
+    pc.printf("[06-25-14 09:40:27.870] <ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 EP=485\n\r");
+    pc.printf("[ROM] Try BCH[5]: CP=16 E\n\r");
+    pc.printf("[06-25-14 09:40:27.885] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 E\n\r");
+    pc.printf("[06-25-14 09:40:27.885] <ROM MSG>:  [ROM] Try BCH[1]: CP=33 EC=54 EP=485\n\r");
+    pc.printf("[ROM] Try BCH[2]: CP=29 EC\n\r");
+    pc.printf("[06-25-14 09:40:27.917] <ROM MSG>:  [ROM] Try BCH[2]: CP=29 EC\n\r");
+    pc.printf("[06-25-14 09:40:27.917] <ROM MSG>:  [ROM] Try BCH[3]: CP=36 EC=59 EP=485\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:40:27.932] <ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 EP=485\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:40:27.948] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 EC=27 EP=512\n\r");
+    pc.printf("[ROM] Root is missing; run\n\r");
+    pc.printf("[06-25-14 09:40:27.963] <ROM MSG>:  [ROM] Root is missing; run\n\r");
+    pc.printf("[06-25-14 09:40:27.963] <ROM MSG>:  [ROM] Root Not Found!\n\r");
+    pc.printf("[ROM] Force D\n\r");
+    pc.printf("[06-25-14 09:40:27.979] <ROM MSG>:  [ROM] Force D\n\r");
+    pc.printf("[06-25-14 09:40:27.979] <ROM MSG>:  [ROM] Waitin\n\r");
+    wait(1.75);
+    pc.printf("[06-25-14 09:40:27.995] <ROM MSG>:  [ROM] Link is UP.\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:40:28.026]<ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("[06-25-14 09:40:31.317]<ROM MSG>:  [ROM] Hard Reset ===> Link is Down.\n\r");
+    pc.printf("[ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:44:03.443] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:44:03.443] <ROM MSG>:  [ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:44:03.459]<ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:44:03.662]<ROM MSG>:  [ROM] PORRST\n\r");
+    pc.printf("[ROM] Rev: 402  CID: 200026BB  BID: 625280\n\r");
+    pc.printf("[ROM] \n\r");
+    pc.printf("[06-25-14 09:44:41.663] <ROM MSG>:  [ROM] Rev: 402  CID: 200026BB  BID: 625280\n\r");
+    pc.printf("[ROM] \n\r");
+    pc.printf("[06-25-14 09:44:41.663] <ROM MSG>:  [ROM] \n\r");
+    pc.printf("[06-25-14 09:44:41.663] <ROM MSG>:  [ROM] Try BCH[2]: CP=29 EC=48 EP=485\n\r");
+    pc.printf("[ROM] Try\n\r");
+    pc.printf("[06-25-14 09:44:41.694] <ROM MSG>:  [ROM] Try\n\r");
+    pc.printf("[06-25-14 09:44:41.694] <ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 EP=48\n\r");
+    pc.printf("[06-25-14 09:44:41.710] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 EC=27 EP=512\n\r");
+    pc.printf("\n\r");
+    wait(1);
+    pc.printf("[06-25-14 09:44:41.725] <ROM MSG>:  [ROM] Try BCH[1]: CP=33 EC=54 EP=485\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:44:41.741] <ROM MSG>:  [ROM] Try BCH[2]: CP=29 EC=48 EP=485\n\r");
+    pc.printf("[ROM] Try BCH[3]: CP=36 EC\n\r");
+    pc.printf("[06-25-14 09:44:41.757] <ROM MSG>:  [ROM] Try BCH[3]: CP=36 EC\n\r");
+    pc.printf("[06-25-14 09:44:41.757] <ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 EP=485\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:44:41.772] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 EC=27 EP=512\n\r");
+    wait(0.75);
+    pc.printf("[ROM] Root is missing; run\n\r");
+    pc.printf("[06-25-14 09:44:41.788] <ROM MSG>:  [ROM] Root is missing; run\n\r");
+    pc.printf("[06-25-14 09:44:41.788] <ROM MSG>:  [ROM] Root Not Found!\n\r");
+    pc.printf("[ROM] Force D\n\r");
+    pc.printf("[06-25-14 09:44:41.803] <ROM MSG>:  [ROM] Force D\n\r");
+    pc.printf("[06-25-14 09:44:41.803] <ROM MSG>:  [ROM] Waitin\n\r");
+    wait(1.5);
+    pc.printf("[06-25-14 09:44:41.819]<ROM MSG>:  [ROM] Link is UP.\n\r");
+    pc.printf("[ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:44:42.864] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:44:42.864]<ROM MSG>:  [ROM] PORRST\n\r");
+    pc.printf("[ROM] Rev: 402  CID: 200026BB\n\r");
+    pc.printf("[06-25-14 09:45:41.972] <ROM MSG>:  [ROM] Rev: 402  CID: 200026BB\n\r");
+    pc.printf("[06-25-14 09:45:41.972] <ROM MSG>:  [ROM] Force Download: waiting for Download Microc\n\r");
+    pc.printf("[06-25-14 09:45:41.987] <ROM MSG>:  [ROM] Waiting for Link to come up...\n\r");
+    pc.printf("\n\r");
+    wait(1);
+    pc.printf("[06-25-14 09:45:42.003] <ROM MSG>:  [ROM] Link is UP.\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:45:42.019]<ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:45:42.331]<ROM MSG>:  [ROM] Hard Reset ===> Link is Down.\n\r");
+    pc.printf("[ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:03.515] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:03.515] <ROM MSG>:  [ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:03.515]<ROM MSG>:  [ROM] Undec Cmd 0xec\n\r");
+    pc.printf("[ROM] Undec Cmd 0xef\n\r");
+    pc.printf("[ROM]\n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:46:03.827] <ROM MSG>:  [ROM] Undec Cmd 0xef\n\r");
+    pc.printf("[ROM]\n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:46:03.827] <ROM MSG>:  [ROM]\n\r");
+    pc.printf("[06-25-14 09:46:03.827]<ROM MSG>:  [ROM] Undec Cmd 0xec\n\r");
+    pc.printf("[ROM] Undec Cmd 0xef\n\r");
+    pc.printf("[RO\n\r");
+    pc.printf("[06-25-14 09:46:03.889] <ROM MSG>:  [ROM] Undec Cmd 0xef\n\r");
+    pc.printf("[RO\n\r");
+    pc.printf("[06-25-14 09:46:03.889] HCA: ERROR-CRC BinMsg 368 bytes Stat FAIL CRC FAIL: 00 5b 52 4f 4d 5d 20 50 4f 52 52 53 54 0d 0a 5b 52 4f 4d 5d 20 52 65 76 3a 20 34 30 32 20 20 43 \n\r");
+    pc.printf("[06-25-14 09:46:03.889] <ROM MSG>:  [ROM] READ NCQ CMD\n\r");
+    wait(1);
+    pc.printf("[ROM] R_NCQ done, lba:00000000,\n\r");
+    pc.printf("[06-25-14 09:46:03.905] <ROM MSG>:  [ROM] R_NCQ done, lba:00000000,\n\r");
+    pc.printf("[06-25-14 09:46:03.905] <ROM MSG>:  [ROM] Data Cmd\n\r");
+    pc.printf("[ROM] READ NCQ CM\n\r");
+    pc.printf("[06-25-14 09:46:03.921] <ROM MSG>:  [ROM] READ NCQ CM\n\r");
+    pc.printf("[06-25-14 09:46:03.921] <ROM MSG>:  [ROM] R_NCQ done, lba:00000008, count:00000008, tag:00000000\n\r");
+    pc.printf("[06-25-14 09:46:03.936] <ROM MSG>:  [ROM] Undec Cmd 0xec\n\r");
+    pc.printf("[ROM] Data Cmd\n\r");
+    pc.printf("[ROM] READ NCQ CMD\n\r");
+    pc.printf("[ROM]\n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:46:03.952] <ROM MSG>:  [ROM] Data Cmd\n\r");
+    pc.printf("[ROM] READ NCQ CMD\n\r");
+    pc.printf("[ROM]\n\r");
+    pc.printf("[06-25-14 09:46:03.952] <ROM MSG>:  [ROM] READ NCQ CMD\n\r");
+    pc.printf("[ROM]\n\r");
+    pc.printf("[06-25-14 09:46:03.952] <ROM MSG>:  [ROM]\n\r");
+    pc.printf("[06-25-14 09:46:03.952] <ROM MSG>:  [ROM] D\n\r");
+    pc.printf("[06-25-14 09:46:03.967] <ROM MSG>:  [ROM] READ NCQ CMD\n\r");
+    pc.printf("[ROM] R_NCQ done, lba:00000018, cou\n\r");
+    pc.printf("[06-25-14 09:46:03.983] <ROM MSG>:  [ROM] R_NCQ done, lba:00000018, cou\n\r");
+    pc.printf("[06-25-14 09:46:03.983] <ROM MSG>:  [ROM] Data Cmd\n\r");
+    pc.printf("[ROM] READ NCQ CMD\n\r");
+    pc.printf("[\n\r");
+    pc.printf("[06-25-14 09:46:03.999] <ROM MSG>:  [ROM] READ NCQ CMD\n\r");
+    pc.printf("[\n\r");
+    pc.printf("[06-25-14 09:46:03.999] <ROM MSG>:  [ROM] READ NCQ CMD\n\r");
+    pc.printf("[ROM] R_NCQ done, lba:00000020,\n\r");
+    wait(0.75);
+    pc.printf("[06-25-14 09:46:04.030] <ROM MSG>:  [ROM] R_NCQ done, lba:00000020,\n\r");
+    pc.printf("[06-25-14 09:46:04.030] <ROM MSG>:  [ROM] Data Cmd\n\r");
+    pc.printf("[ROM] READ NCQ CM\n\r");
+    pc.printf("[06-25-14 09:46:04.045] <ROM MSG>:  [ROM] READ NCQ CM\n\r");
+    pc.printf("[06-25-14 09:46:04.045] <ROM MSG>:  [ROM] R_NCQ done, lba:00000008, count:00000008, tag:00000000\n\r");
+    pc.printf("[06-25-14 09:46:04.061]<ROM MSG>:  [ROM] Hard Reset ===> Link is Down.\n\r");
+    pc.printf("[ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:04.747] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:04.747]<ROM MSG>:  [ROM] Hard Reset ===> Link is Down.\n\r");
+    pc.printf("[ROM] PHY Ready\n\r");
+    wait(0.75);
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:10.441] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:10.457] <ROM MSG>:  [ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:10.457] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:10.473]<ROM MSG>:  [ROM] Hard Reset ===> Link is Down.\n\r");
+    wait(0.75);
+    pc.printf("[ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:15.761] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("[ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:15.761] <ROM MSG>:  [ROM] Sig \n\r");
+    pc.printf("[06-25-14 09:46:15.761] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:15.777]<ROM MSG>:  [ROM] PORRST\n\r");
+    pc.printf("[ROM] Rev: 402  CID: 200026BB\n\r");
+    pc.printf("[06-25-14 09:46:51.625] <ROM MSG>:  [ROM] Rev: 402  CID: 200026BB\n\r");
+    pc.printf("[06-25-14 09:46:51.625] <ROM MSG>:  [ROM] Try BCH[1]: CP=33 EC=54 EP=485\n\r");
+    pc.printf("[ROM] Try B\n\r");
+    pc.printf("[06-25-14 09:46:51.640] <ROM MSG>:  [ROM] Try B\n\r");
+    pc.printf("[06-25-14 09:46:51.640] <ROM MSG>:  [ROM] Try BCH[3]: CP=36 EC=59 EP=485\n\r");
+    pc.printf("[06-25-14 09:46:51.656] <ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 EP=485\n\r");
+    pc.printf("[ROM] Try BCH[5]: CP=16 E\n\r");
+    wait(0.5);
+    pc.printf("[06-25-14 09:46:51.672] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 E\n\r");
+    pc.printf("[06-25-14 09:46:51.672] <ROM MSG>:  [ROM] Try BCH[1]: CP=33 EC=54 EP=485\n\r");
+    pc.printf("[ROM] Try BCH[2]: CP=29 EC\n\r");
+    wait(1);
+    pc.printf("[06-25-14 09:46:51.703] <ROM MSG>:  [ROM] Try BCH[2]: CP=29 EC\n\r");
+    pc.printf("[06-25-14 09:46:51.703] <ROM MSG>:  [ROM] Try BCH[3]: CP=36 EC=59 EP=485\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:51.718] <ROM MSG>:  [ROM] Try BCH[4]: CP=39 EC=64 EP=485\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:51.734] <ROM MSG>:  [ROM] Try BCH[5]: CP=16 EC=27 EP=512\n\r");
+    pc.printf("[ROM] Root is missing; run\n\r");
+    wait(0.25);
+    pc.printf("[06-25-14 09:46:51.750] <ROM MSG>:  [ROM] Root is missing; run\n\r");
+    pc.printf("[06-25-14 09:46:51.750] <ROM MSG>:  [ROM] Root Not Found!\n\r");
+    pc.printf("[ROM] Force D\n\r");
+    pc.printf("[06-25-14 09:46:51.765] <ROM MSG>:  [ROM] Force D\n\r");
+    pc.printf("[06-25-14 09:46:51.765] <ROM MSG>:  [ROM] Waitin\n\r");
+    pc.printf("[06-25-14 09:46:51.781] <ROM MSG>:  [ROM] Link is UP.\n\r");
+    pc.printf("[ROM] PHY Ready\n\r");
+    pc.printf("\n\r");
+    pc.printf("[06-25-14 09:46:51.812] <ROM MSG>:  [ROM] PHY Ready\n\r");
+    wait(0.75);
+}

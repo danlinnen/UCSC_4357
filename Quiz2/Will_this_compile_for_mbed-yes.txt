@@ -1,0 +1,6 @@
+#include "mbed.h"
+
+int main() {
+  unsigned int Arr[16];
+  3[Arr] = 7;
+}
