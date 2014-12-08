@@ -1,0 +1,33 @@
+BEGIN
+--------------------------------------------------------------------
+Q1: How many microcontrollers in the mbed LPC1768 board?
+
+
+	There are 2 microcontrollers, one for the user to learn on and one to maintain the interface between the computer and the mbed.
+
+--------------------------------------------------------------------
+Q2: What is the size (in GB) of the Flash Memory ("USB Dsik") of the LPC1768?
+
+	Size in GB = 0.0019GB (or 2,064,384 Bytes / 1.96 MB)
+
+
+
+--------------------------------------------------------------------
+Q3: Name 3 functions (or features) that mbed USB cable provided:
+
+	1.Serial Port
+	2.USB Flash Memory
+	3.Debug
+
+--------------------------------------------------------------------
+Q4: What is the name of the Ethernet PHY chip in the mbed board (LPC1768)?
+
+	DP83848J (Per page 4 of the schematic.)
+
+--------------------------------------------------------------------
+Q5: Reference LPC17xx_UM10360.pdf (Chapter 2)
+What are the GPIO address window?
+
+	Page 13 Describes the memory map and lists "GPIO 0x2009 C000 - 0x2009 FFFF GPIO."
+
+END

@@ -1,0 +1,89 @@
+BEGIN
+--------------------------------------------------------------------
+Q1: Implement the following inline functions:
+inline int CircularBufferIsFull(CircularBuffer* que)
+{
+	return (((que->writePointer + 1) % que->size) == que->readPointer);
+}
+
+inline int CircularBufferIsEmpty(CircularBuffer* que)
+{
+	return (((que->readPointer + 1) % que->size) == que->writePointer);
+}
+--------------------------------------------------------------------
+Q2: How to compute "Interrupt Latency"?
+
+	"In computing, interrupt latency is the time that elapses from when an interrupt is generated to when the source of the interrupt is serviced." - Wikipedia
+	
+	In theory, This would be the time to percieve the interrupt + Time to save the current state + Time to actually handle the interrupt.
+
+	In practice, GPIO signals could be used or print statements to determine this time for external interrupts and internal interrupts respectively.
+
+
+--------------------------------------------------------------------
+
+Q3: Serial pc(USBTX, USBRX); // tx, rx
+What API (function) do you use to change the baud rate?
+
+	"pc.baud(<insert desired baud rate>);"
+
+
+--------------------------------------------------------------------
+Q4: How many bit(s) does TDO have? Is TDO an input or output type? (Ref: JTAG Pins)
+
+	TDO is an output.  TDO comes from an instruction register, so it is based on the witdth of the instruction register.  I cannot find the instruction register width for this specific device, but on the web Cortex-M3 can have IR_Width = 4.
+
+--------------------------------------------------------------------
+Q5:
+What is the address of ledArr[0]?  		0x000000001000015c
+What is the address of ch?  			0x0000000010007ff8
+
+
+	I added debug code at the end of the while(1) loop..
+
+	pc.printf("\r\n address_ch = 0x%016x \r\n",&ch );
+	pc.printf("\r\n address_led_Arr_zero  = 0x%016x \r\n",&ledArr[0]);
+
+	Result:
+		address_ch = 0x0000000010007ff8
+		address_led_Arr_zero  = 0x000000001000015c
+
+
+
+/*
+* Enter a hex number [0-9a-fA-F]; Decode it in 4-bit binary format and display them on 4 on board leds.
+*/
+#include "mbed.h"
+Serial pc(USBTX, USBRX); // tx, rx
+DigitalOut ledArr[4] = {DigitalOut(LED1), DigitalOut(LED2), DigitalOut(LED3), DigitalOut(LED4)};
+void DisplayLed(int ch)
+{
+int i=0;
+if (ch>='0' && ch<='9')
+ch-='0';
+else if (ch>='A' && ch<='F') {
+ch-='A';
+ch+=10;
+} else if (ch>='a' && ch<='f') {
+ch-='a';
+ch+=10;
+} else
+ch=0;
+for (i=0; i<4; i++) {
+if(ch& (1<<i))
+ledArr[i] = 1;
+else
+ledArr[i] = 0;
+}
+}
+int main(void) {
+int ch;
+pc.baud(9600);
+pc.printf("\r\nHello World!");
+while(1) {
+pc.printf("\r\nEnter:");
+ch = pc.getc();
+pc.putc(ch);
+DisplayLed(ch);
+}
+}

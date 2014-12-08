@@ -1,0 +1,24 @@
+// Make a sawtooth output
+ 
+#include "mbed.h"
+ bool state = 0;
+AnalogOut tri(p18);
+int main() {
+    while(1) {
+        if(state==0)
+        {
+            tri = tri + 0.1;
+        }
+        if(state==1)
+        {
+            tri = tri - 0.1;
+        }
+        wait(0.025);
+        if(tri >= 1) {
+            state = 1;
+        }
+        if(tri <= 0) {
+            state = 0;
+        }
+    }
+}

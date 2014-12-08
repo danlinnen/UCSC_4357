@@ -1,0 +1,91 @@
+BEGIN
+--------------------------------------------------------------------
+Q1: Is there any compile error with the following code (if any)?
+unsigned int Arr[16];
+3[Arr] = 7;
+Explain:
+
+Yes, an error was given as "Expected a declaration of 3[ARR] = 7;"
+Perhaps the coder intended to assign the element in address 3 of Arr to 7???
+
+--------------------------------------------------------------------
+Q2: What is the difference between the following 3 statements?
+const int * px;  <-- Points to constant integer
+int const * px;  <-- Points to integer constant
+int * const px;  <-- Constant Pointer
+Is there any compile error for the following cases?
+case1:
+int x = 13;
+const int * px;
+px = & x;
+
+	Error: This declaration has no storage class or type specifier in "main.cpp", Line: 3, Col: 2
+	Error: Variable "px" has already been defined in "main.cpp", Line: 3, Col: 2
+	Error: A value of type "int *" cannot be used to initialize an entity of type "int" in "main.cpp", Line: 3, Col: 6
+
+
+case 2:
+int x = 13;
+int const * px;
+px = & x;
+	
+	Error: This declaration has no storage class or type specifier in "main.cpp", Line: 3, Col: 2
+	Error: Variable "px" has already been defined in "main.cpp", Line: 3, Col: 2
+	Error: A value of type "int *" cannot be used to initialize an entity of type "int" in "main.cpp", Line: 3, Col: 6
+
+
+case 3:
+int x = 13;
+int * const px;
+px = & x;
+
+	Error: Const variable "px" requires an initializer in "main.cpp", Line: 2, Col: 15
+	Error: This declaration has no storage class or type specifier in "main.cpp", Line: 3, Col: 2
+	Error: Variable "px" has already been defined in "main.cpp", Line: 3, Col: 2
+	Error: A value of type "int *" cannot be used to initialize an entity of type "int" in "main.cpp", Line: 3, Col: 6
+
+
+Explain:
+
+	All 3 cases show errors when compiled using the mbed compiler, BUT when boilerplate code of int main(){ <lines>} then.
+
+	Case 1 = Pass
+	Case 2 = PAss
+	Case 3 = Fail
+
+	Case 3 Output:
+		Error: Const variable "px" requires an initializer in "main.cpp", Line: 3, Col: 15
+		Error: Expression must be a modifiable lvalue in "main.cpp", Line: 4, Col: 2
+
+
+
+--------------------------------------------------------------------
+Q3: Write a function to set or clear ith bit of a 32-bit register.
+Where ith (0-based) := {0, 1, 2, …, 31 }
+void reg_set(volatile unsigned int * pReg, int ith)
+{
+  pReg |= 1 << ith;    //OR with 1 of the bit in question.
+}
+void reg_clear(volatile unsigned int * pReg, int ith)
+{
+  pReg &= ~(1 << ith); //AND with the NOT of the previous function.
+}
+
+//Followed Example from: http://stackoverflow.com/questions/47981/how-do-you-set-clear-and-toggle-a-single-bit-in-c-c
+--------------------------------------------------------------------
+Q4: Write a swap function in C.
+void swap(unsigned int * px, unsigned int *py) {
+	unsigned int z = *py;
+	*py = *px;
+	*px = z;
+}
+--------------------------------------------------------------------
+Q5: What is the output of the following code? (Given: sizeof(unsigned int) is 4) Page 34
+unsigned int Arr[16];
+unsigned int a0 = (unsigned int) &Arr[0];
+unsigned int a3 = (unsigned int) &Arr[3];
+printf(“%d\n”, a3 – a0);
+
+Answer:  4*(3-0) = 12
+
+END

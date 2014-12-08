@@ -1,0 +1,50 @@
+BEGIN
+--------------------------------------------------------------------
+1. What is the _mask value for LED1?
+	
+	Per the mbed librarty internals site (http://developer.mbed.org/handbook/mbed-library-internals), this is the code used to mask the LED1.
+
+		"unsigned int mask_pin18 = 1 << 18;"
+	
+	This means that the LED mask would be the 18th bit. (In hex = 0x0004 0000)
+
+What is the address of FIOSET?
+
+	The address range associated with the FIOSET can be found on page 134, in Table 107 of the UM10360 Mbed User Manual.
+	STart address: FIO0SET0 - 0x2009 C018
+	Stop address:  FIO4SETU - 0x2009 C09A
+
+
+--------------------------------------------------------------------
+2. What is the RS232 Frame?
+The RS232 frame is a means of sending serial data, 1 byte at a time.
+
+The idle state is high.
+The start bit is low.
+The data payload of 1 byte + Parity.
+The stop bit is high.
+
+--------------------------------------------------------------------
+3. Explain the start and stop conditions of i2c?
+
+Per Embedded Systems Academy...
+
+"The chip issuing the Start condition first pulls the SDA (data) line low, and next pulls the SCL (clock) line low."
+
+"The Bus Master first releases the SCL and then the SDA line."
+
+
+--------------------------------------------------------------------
+4. Is the i2c acknowledge SDA LOW or SDA HIGH?
+
+SDA would be low for an acknowledge.
+
+(Per Figure 7.8 on page 131 of the Fast and Effective Embedded Systems Design book)
+
+--------------------------------------------------------------------
+5. Tell me about the DDR3 write leveling Concept in one sentence.
+(ref: slides)
+
+DDR3 write leveling is a DQS (timing) compensation method.
+
+END
